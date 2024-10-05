@@ -7,7 +7,7 @@ export const PlanetContext = createContext();
 
 function App() {
   return (
-    <PlanetContext.Provider value={{}}>
+    <PlanetContext.Provider value={{}}>  
       <Routers />
     </PlanetContext.Provider>
   );
