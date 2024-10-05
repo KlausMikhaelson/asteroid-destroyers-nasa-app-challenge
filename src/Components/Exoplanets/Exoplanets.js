@@ -1,39 +1,26 @@
-import { Sphere } from "@react-three/drei";
-import React, { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { Sphere, useTexture } from "@react-three/drei";
+import React from "react";
 
-const Exoplanets = ({ position, color }) => {
+const Exoplanets = ({ position, color, size = 1, texture }) => {
+  // Use useTexture to load the texture
+  const textures = useTexture(texture ? [texture] : []); // Load texture only if provided
+  const map = textures[0]; // Get the first texture from the loaded array
+
+  // Check if the texture is successfully loaded
+  if (texture && !map) {
+    console.error("Texture failed to load:", texture); // Log the texture path if it fails
+  }
+
   return (
-    <Sphere position={position} args={[1, 32, 32]}>
-      <meshStandardMaterial attach="material" color={color} />
+    <Sphere position={position} args={[size, 32, 32]}>
+      <meshStandardMaterial 
+        attach="material" 
+        color={color} 
+        map={map} // Use the loaded texture if it exists
+        transparent={true} // Enable transparency if needed
+      />
     </Sphere>
   );
 };
-
-// const Orbits = () => {
-//   const orbitRef1 = useRef();
-//   const orbitRef2 = useRef();
-
-//   useFrame(() => {
-//     // Rotate the orbits to make planets move
-//     if (orbitRef1.current) {
-//       orbitRef1.current.rotation.y += 0.01;
-//     }
-//     if (orbitRef2.current) {
-//       orbitRef2.current.rotation.y += 0.02; // Different speed for variety
-//     }
-//   });
-
-//   return (
-//     <>
-//       <group ref={orbitRef1}>
-//         <Exoplanets position={[5, 0, 0]} color={"green"} />
-//       </group>
-//       <group ref={orbitRef2}>
-//         <Exoplanets position={[10, 0, 0]} color={"blue"} />
-//       </group>
-//     </>
-//   );
-// };
 
 export default Exoplanets;
