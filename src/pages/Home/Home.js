@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
-import { Canvas, extend, useFrame } from "@react-three/fiber";
+import React, { useRef, useState } from "react";
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import { geometry } from "maath";
 import { Sky, OrbitControls, Line } from "@react-three/drei";
 import Exoplanets from "../../Components/Exoplanets/Exoplanets";
+import SidebarFilter from "../../Components/SIdebars/SidebarFilter";
+import SidebarInformation from "../../Components/SIdebars/SidebarInformation";
 
 const dummyPlanets = [
   {
@@ -52,20 +54,122 @@ const dummyPlanets = [
 extend(geometry);
 
 const Home = () => {
-  return (
-    <Canvas style={{ height: "100vh" }} className="h-[100vh] bg-black">
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <OrbitControls />
-      <pointLight position={[10, 10, 10]} />
+  const [zoom, setZoom] = useState(50);
+  const [characterizedExoplanets, setCharacterizedExoplanets] = useState([
+    // dummy data with image, planet name
+    {
+      id: 1,
+      key: 1,
+      name: "Kepler-22b",
+      image:
+        "https://static.scientificamerican.com/sciam/cache/file/69B35544-5929-46C7-8CFB4A9476481272_source.jpg?w=1200",
+    },
+    {
+      id: 2,
+      key: 2,
+      name: "Kepler-186f",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 3,
+      key: 3,
+      name: "Kepler-452b",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 4,
+      key: 4,
+      name: "Kepler-452b",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 1,
+      key: 1,
+      name: "Kepler-22b",
+      image:
+        "https://static.scientificamerican.com/sciam/cache/file/69B35544-5929-46C7-8CFB4A9476481272_source.jpg?w=1200",
+    },
+    {
+      id: 2,
+      key: 2,
+      name: "Kepler-186f",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 3,
+      key: 3,
+      name: "Kepler-452b",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 4,
+      key: 4,
+      name: "Kepler-452b",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 1,
+      key: 1,
+      name: "Kepler-22b",
+      image:
+        "https://static.scientificamerican.com/sciam/cache/file/69B35544-5929-46C7-8CFB4A9476481272_source.jpg?w=1200",
+    },
+    {
+      id: 2,
+      key: 2,
+      name: "Kepler-186f",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 3,
+      key: 3,
+      name: "Kepler-452b",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+    {
+      id: 4,
+      key: 4,
+      name: "Kepler-452b",
+      image:
+        "https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA19347_hires.jpg",
+    },
+  ]);
+  const orbitControlsRef = useRef();
 
-      {dummyPlanets.map((planet) => (
-        <>
-          <OrbitPath key={`orbit-${planet.key}`} radius={planet.radius} />
-          <OrbitingPlanet key={planet.key} planet={planet} />
-        </>
-      ))}
-    </Canvas>
+  const handleZoomChange = (event) => {
+    setZoom(event.target.value);
+    if (orbitControlsRef.current) {
+      orbitControlsRef.current.object.zoom = event.target.value / 50; // Adjust the zoom scaling
+      orbitControlsRef.current.object.updateProjectionMatrix();
+    }
+  };
+
+  return (
+    <>
+      <SidebarFilter characterizedExoplanets={characterizedExoplanets} />
+      <SidebarInformation characterizedExoplanets={characterizedExoplanets} />
+      <Canvas style={{ height: "100vh" }} className="h-[100vh] bg-black">
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <OrbitControls ref={orbitControlsRef} />
+        <pointLight position={[10, 10, 10]} />
+
+        {dummyPlanets.map((planet) => (
+          <React.Fragment key={planet.key}>
+            <OrbitPath key={`orbit-${planet.key}`} radius={planet.radius} />
+            <OrbitingPlanet key={planet.key} planet={planet} />
+          </React.Fragment>
+        ))}
+      </Canvas>
+    </>
   );
 };
 
