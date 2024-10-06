@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { MapControls, OrbitControls } from "@react-three/drei";
 import Exoplanets from "../../Components/Exoplanets/Exoplanets";
+import axios from "axios";  // You can use fetch as well
 import { exoplanets } from '../../data/exoplanets';
+
+const API_URL = "http://localhost:5001"; // Update with actual API URL
 
 // Utility function for random position in the XZ plane
 const getRandomPositionInPlane = (distance) => {
@@ -19,8 +22,18 @@ const getPlanetColor = (name) => {
   return colors[index];
 };
 
-// Orbiting Planet component
-const OrbitingPlanet = ({ planet }) => {
+const OverlaySphere = ({ position }) => {
+  return (
+    <mesh position={position}>
+      <sphereGeometry args={[4, 100, 100]} /> {/* Larger transparent green sphere */}
+      <meshBasicMaterial color="lightgreen" opacity={0.6} transparent />
+      {/* <meshBasicMaterial color="#72377a" opacity={0.8} transparent /> */}
+    </mesh>
+  );
+};
+
+// Orbiting Planet component with overlay
+const OrbitingPlanet = ({ planet, isFiltered }) => {
   return (
     <group>
       <Exoplanets
@@ -31,14 +44,40 @@ const OrbitingPlanet = ({ planet }) => {
         hostname={planet.hostname}
         discYear={planet.disc_year}
       />
+      {isFiltered && <OverlaySphere position={planet.position} />} {/* Overlay on filtered planets */}
     </group>
   );
 };
 
 const CanvasContainer = () => {
+  const [filteredPlanets, setFilteredPlanets] = useState([]);
+
+  // Fetch filtered planets from the API
+  const fetchFilteredPlanets = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/get_top_planets`, {
+        filepath: "/path/to/your/csv/file.csv",  // Replace with actual file path
+        SNR0: 100,
+        D: 6,
+        top_n: 100
+      });
+
+      if (response.data) {
+        setFilteredPlanets(response.data.map(planet => planet.pl_name)); // Store the filtered planet names
+      }
+    } catch (error) {
+      console.error("Error fetching filtered planets:", error);
+    }
+  };
+
+  // Fetch filtered planets when the component mounts
+  useEffect(() => {
+    fetchFilteredPlanets();
+  }, []);
+
   return (
     <Canvas
-    camera={{
+      camera={{
         position: [0, 800, 0], // Default camera position (further away for zoom out)
         fov: 75, // Field of view
         near: 0.1, // Near clipping plane
@@ -50,12 +89,13 @@ const CanvasContainer = () => {
       <ambientLight intensity={0.5} color="#ffffff" />
       <directionalLight position={[5, 5, 5]} intensity={1} />
       
+      {/* <MapControls></MapControls> */}
       {/* OrbitControls for side view */}
       <OrbitControls
         maxPolarAngle={Math.PI}  // Allow full vertical rotation
         minPolarAngle={0}        // Allow full vertical rotation
         enableZoom={true}        // Enable zooming
-        maxDistance={1000}        // Maximum zoom-out distance
+        maxDistance={1000}       // Maximum zoom-out distance
         minDistance={10}         // Minimum zoom-in distance
         target={[0, 0, 0]}       // Focus the camera on the center
       />
@@ -73,6 +113,7 @@ const CanvasContainer = () => {
               hostname: planet.hostname,
               disc_year: planet.disc_year,
             }}
+            isFiltered={filteredPlanets.includes(planet.pl_name)} // Check if the planet is filtered
           />
         </React.Fragment>
       ))}
