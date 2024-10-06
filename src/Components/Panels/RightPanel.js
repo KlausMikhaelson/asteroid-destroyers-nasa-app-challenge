@@ -1,6 +1,9 @@
 import React from "react";
 
 const RightPanel = ({ selectedExoplanet }) => {
+  // Assuming the LLM habitability prediction is calculated elsewhere and passed down as a boolean.
+  const isHabitable = selectedExoplanet?.habitable || false; // Example: using a field 'habitable' for simplicity
+
   // Check if an exoplanet is selected
   if (!selectedExoplanet) {
     return (
@@ -90,6 +93,17 @@ const RightPanel = ({ selectedExoplanet }) => {
           <span className="font-medium text-sm">Category</span>
           <span className="text-sm">{selectedExoplanet.category}</span>
         </div>
+      </div>
+
+      {/* LLM Prediction Block */}
+      <div
+        className={`p-4 mt-4 rounded-md text-center font-semibold ${
+          isHabitable
+            ? "bg-green-200/70 text-green-800"
+            : "bg-yellow-200/70 text-yellow-800"
+        }`}
+      >
+        {isHabitable ? "Habitable" : "Not Habitable"}
       </div>
     </div>
   );

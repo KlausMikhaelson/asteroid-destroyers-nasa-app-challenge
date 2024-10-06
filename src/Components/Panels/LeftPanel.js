@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios"; // You can also use fetch if preferred
 
-const API_URL = "http://localhost:5001"; // Update with your API URL
-
 const LeftPanel = ({ onApplyFilters, onSelectExoplanet }) => {
   const [selectedTelescope, setSelectedTelescope] = useState("");
   const [selectedAttribute, setSelectedAttribute] = useState(""); // Exoplanet category filter state
@@ -21,7 +19,7 @@ const LeftPanel = ({ onApplyFilters, onSelectExoplanet }) => {
         top_n: 5800,
         category: selectedAttribute || "",
       };
-      const response = await axios.post(`${API_URL}/get_top_planets`, params, {
+      const response = await axios.post(`${REACT_APP_API_URL}/get_top_planets`, params, {
         headers: {
           "Content-Type": "application/json",
         },
