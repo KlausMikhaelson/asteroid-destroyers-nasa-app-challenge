@@ -10,6 +10,13 @@ const Exoplanets = ({ position, color }) => {
   );
 };
 
+export default Exoplanets;
+
+
+// const firstFilteredPlanet = filteredPlanets.length > 0 ? filteredPlanets[0].pl_name : null;
+// isFiltered={planet.pl_name === firstFilteredPlanet} // Apply the overlay to only the first filtered planet
+
+
 // const Orbits = () => {
 //   const orbitRef1 = useRef();
 //   const orbitRef2 = useRef();
@@ -35,5 +42,3 @@ const Exoplanets = ({ position, color }) => {
 //     </>
 //   );
 // };
-
-export default Exoplanets;
