@@ -28,7 +28,7 @@ const RightPanel = ({ selectedExoplanet }) => {
       </div>
 
       {/* Exoplanet Information */}
-      <div className="flex flex-col space-y-2 bg-blue-800/40 p-2 rounded-md text-sm">
+      <div className="flex flex-col space-y-2 bg-blue-800/40 p-2 rounded-md text-sm flex-grow overflow-y-auto">
         <div className="flex justify-between">
           <span className="font-medium text-sm">Planet Name</span>
           <span className="text-sm">{selectedExoplanet.pl_name}</span>
@@ -96,14 +96,21 @@ const RightPanel = ({ selectedExoplanet }) => {
       </div>
 
       {/* LLM Prediction Block */}
-      <div
-        className={`p-4 mt-4 rounded-md text-center font-semibold ${
-          isHabitable
-            ? "bg-green-200/70 text-green-800"
-            : "bg-yellow-200/70 text-yellow-800"
-        }`}
-      >
-        {isHabitable ? "Habitable" : "Not Habitable"}
+      <div className="flex flex-col items-center space-y-2 mt-4">
+        <div
+          className={`p-4 rounded-md text-center font-semibold w-full ${
+            isHabitable
+              ? "bg-[#00ff001a] bg-opacity-50 text-[#00ff00]"
+              : "bg-[#ffff001a] bg-opacity-90 text-[#ffff00]"
+          }`}
+        >
+          {isHabitable ? "Habitable" : "Not Habitable"}
+        </div>
+
+        {/* Disclaimer Text */}
+        <div className="text-xs text-gray-300 text-center">
+          This is an LLM-based prediction and may be inaccurate.
+        </div>
       </div>
     </div>
   );

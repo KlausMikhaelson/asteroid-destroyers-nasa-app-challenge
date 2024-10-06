@@ -8,8 +8,7 @@ const TopPanel = ({ stats }) => {
       <div className="flex justify-around items-center">
         {/* Number of Exoplanets */}
         <p className="text-lg">{totalPlanets} exoplanets</p>
-        <p className="text-lg">{viewedPlanets} stars</p>
-        <p className="text-lg">{viewedPlanets} moons</p>
+        <p className="text-lg">{viewedPlanets} focused</p>
       </div>
     </div>
   );

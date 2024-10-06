@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <div className="relative h-[100vh] w-[100vw]">
       {/* Top Panel for statistics */}
-      <TopPanel stats={{ totalPlanets: 5800, viewedPlanets: filteredPlanetCount }} />
+      <TopPanel stats={{ totalPlanets: 5765, viewedPlanets: filteredPlanetCount }} />
 
       {/* Left Panel for filtering */}
       <LeftPanel onApplyFilters={handleApplyFilters} onSelectExoplanet={selectExoplanet} /> {/* Pass callback to receive filtered data and handle selection */}

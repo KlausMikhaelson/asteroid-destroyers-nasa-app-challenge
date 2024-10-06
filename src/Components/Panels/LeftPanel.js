@@ -16,10 +16,10 @@ const LeftPanel = ({ onApplyFilters, onSelectExoplanet }) => {
         SNR0: 100,
         SNR_filter: snrThreshold ? Number(snrThreshold) : 5,
         D: selectedTelescope === "config-2" ? 8 : 6,
-        top_n: 5800,
+        top_n: 5765,
         category: selectedAttribute || "",
       };
-      const response = await axios.post(`${REACT_APP_API_URL}/get_top_planets`, params, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/get_top_planets`, params, {
         headers: {
           "Content-Type": "application/json",
         },
