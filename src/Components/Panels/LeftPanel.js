@@ -89,7 +89,7 @@ const LeftPanel = ({ onApplyFilters, onSelectExoplanet }) => {
 
       {/* Apply Button */}
       <button
-        className="p-2 bg-white text-black text-sm rounded-md hover:bg-gray-200 focus:outline-none"
+        className="p-2 bg-white text-black text-sm rounded-md hover:bg-gray-200 focus:outline-none font-bold"
         onClick={applyFilters}
       >
         Apply Filters

@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { generateHabitabilityResponse } from "../../helpers/openai.helper"; // Import the helper function
 
 const RightPanel = ({ selectedExoplanet }) => {
-  // Assuming the LLM habitability prediction is calculated elsewhere and passed down as a boolean.
-  const isHabitable = selectedExoplanet?.habitable || false; // Example: using a field 'habitable' for simplicity
+  const [loading, setLoading] = useState(false);
+  const [isHabitable, setIsHabitable] = useState(null); // Null initially while waiting for the response
+
+  useEffect(() => {
+    // If an exoplanet is selected, fetch the habitability prediction
+    if (selectedExoplanet) {
+      setLoading(true); // Set loading to true
+      generateHabitabilityResponse(selectedExoplanet)
+        .then((response) => {
+          // Parse response as a boolean ("true" or "false" as string to boolean)
+          const parsedResponse = response.toLowerCase() === "true";
+          setIsHabitable(parsedResponse);
+        })
+        .catch((error) => {
+          console.error("Error fetching habitability:", error);
+          setIsHabitable(null); // Handle error case
+        })
+        .finally(() => {
+          setLoading(false); // Set loading to false after the API call finishes
+        });
+    }
+  }, [selectedExoplanet]);
 
   // Check if an exoplanet is selected
   if (!selectedExoplanet) {
@@ -97,15 +118,42 @@ const RightPanel = ({ selectedExoplanet }) => {
 
       {/* LLM Prediction Block */}
       <div className="flex flex-col items-center space-y-2 mt-4">
-        <div
-          className={`p-4 rounded-md text-center font-semibold w-full ${
-            isHabitable
-              ? "bg-[#00ff001a] bg-opacity-50 text-[#00ff00]"
-              : "bg-[#ffff001a] bg-opacity-90 text-[#ffff00]"
-          }`}
-        >
-          {isHabitable ? "Habitable" : "Not Habitable"}
-        </div>
+        {loading ? (
+          <div className="text-center p-4 text-gray-400">
+            {/* Simple Spinner */}
+            <svg
+              className="animate-spin h-5 w-5 text-white mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              />
+            </svg>
+            <div className="mt-2 text-sm">Analyzing Habitability...</div>
+          </div>
+        ) : (
+          <div
+            className={`p-4 rounded-md text-center font-semibold w-full ${
+              isHabitable
+                ? "bg-[#00ff001a] bg-opacity-50 text-[#00ff00]" // Green for "Habitable"
+                : "bg-[#ffff001a] bg-opacity-90 text-[#ffff00]" // Yellow for "Not Habitable"
+            }`}
+          >
+            {isHabitable ? "Habitable" : "Not Habitable"}
+          </div>
+        )}
 
         {/* Disclaimer Text */}
         <div className="text-xs text-gray-300 text-center">
